@@ -5,6 +5,7 @@ using System.Linq;
 
 public class Lidar : MonoBehaviour {
 
+    [SerializeField] private PointCloud pointCloud;
     private List<Vector3> hitPoints;
 
     private void Start() {
@@ -25,14 +26,19 @@ public class Lidar : MonoBehaviour {
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
 
             Vector3 currentHitPos = hit.point;
-            if (hitPoints.LastOrDefault() != currentHitPos) { // Don't repeat several data points in a row
-                hitPoints.Add(currentHitPos);
-                Debug.Log("Did add: " + currentHitPos);
+            if (hitPoints.LastOrDefault() != currentHitPos) { // Don't repeat several data points in a row, prevents unneeded points when the walker is static
+                AddPoint(currentHitPos);
             }
         } else {
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.white);
             //Debug.Log("Did not Hit");
         }
+    }
+
+    private void AddPoint(Vector3 hitPoint) {
+        hitPoints.Add(hitPoint);
+        Debug.Log("Did add: " + hitPoint);
+        pointCloud.AddPoint(hitPoint);
     }
 
 }
