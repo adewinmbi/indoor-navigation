@@ -6,7 +6,6 @@ using System.Linq;
 public class Lidar : MonoBehaviour {
 
     [SerializeField] private PointCloud pointCloud;
-    private int refreshCycles; // Number of rotations of lidar sensors before points are wiped from the point cloud
     private List<Vector3> hitPoints;
 
     private void Start() {
