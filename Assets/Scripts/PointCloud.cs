@@ -10,7 +10,13 @@ public class PointCloud : MonoBehaviour {
 
     public void AddPoint(Vector3 hitPoint) {
         Image newPointIcon = Instantiate(pointIcon, background.transform);
-        newPointIcon.rectTransform.localPosition = new Vector3(hitPoint.x, hitPoint.z);
+        newPointIcon.rectTransform.localPosition = new Vector3(hitPoint.x * 17, hitPoint.z * 17);
+    }
+
+    private void ClearAllPoints() {
+        foreach (Transform transform in background.transform) {
+            GameObject.Destroy(transform.gameObject);
+        }
     }
 
 }
