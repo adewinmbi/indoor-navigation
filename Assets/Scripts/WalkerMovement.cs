@@ -13,6 +13,7 @@ public class WalkerMovement : MonoBehaviour {
         translation *= Time.deltaTime;
         transform.Translate(new Vector3(translation.x, 0, translation.y));
 
+        pointCloud.UpdateWalkerPosition(transform.position);
         pointCloud.ShiftPointCloud(transform.position);
     }
 
