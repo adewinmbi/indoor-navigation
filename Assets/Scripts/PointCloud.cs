@@ -10,6 +10,7 @@ public class PointCloud : MonoBehaviour {
     [SerializeField] private Image pointCloudHolder;
     private int scale = 17; // Just for display purposes
     private int resolutionDecreaseFactor = 1; // Lidar points will be clamped to every X units vertically and horizontally
+    private List<Vector2> hitPoints = new List<Vector2>();
 
     public void UpdateWalkerPosition(Vector3 position) {
         position.x = RoundToNearest(resolutionDecreaseFactor, position.x);
@@ -24,6 +25,11 @@ public class PointCloud : MonoBehaviour {
         hitPoint.z = RoundToNearest(resolutionDecreaseFactor, hitPoint.z);
 
         newPointIcon.rectTransform.localPosition = new Vector3(hitPoint.x * scale, hitPoint.z * scale);
+
+        Vector2 fixedHitPoint = new Vector2(hitPoint.x, hitPoint.z);
+        if (!hitPoints.Contains(fixedHitPoint)) {
+            hitPoints.Add(fixedHitPoint);
+        }
     }
 
     public void ShiftPointCloud(Vector3 walkerDisplacement) {
