@@ -639,6 +639,7 @@ GameObject:
   - component: {fileID: 1003979019}
   - component: {fileID: 1003979018}
   - component: {fileID: 1003979024}
+  - component: {fileID: 1003979025}
   m_Layer: 2
   m_Name: Walker
   m_TagString: Untagged
@@ -741,6 +742,20 @@ MonoBehaviour:
   pointCloud: {fileID: 1167515155}
   translationSpeed: {x: 5, y: 5}
   rotationSpeed: 0
+--- !u!114 &1003979025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1003979017}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8eebb201fcbd34748aa129d985d9fe82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walker: {fileID: 1003979017}
+  watch: {fileID: 2087395498}
 --- !u!1 &1167515150
 GameObject:
   m_ObjectHideFlags: 0
