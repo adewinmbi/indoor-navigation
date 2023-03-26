@@ -32,6 +32,9 @@ public class PointCloud : MonoBehaviour {
             Image newPointIcon = Instantiate(pointIcon, pointCloudHolder.transform);
             newPointIcon.gameObject.SetActive(true);
             newPointIcon.rectTransform.localPosition = new Vector3(fixedHitPoint.x * scale, fixedHitPoint.y * scale);
+
+            Debug.Log("Lidar map has changed!");
+            // Regenerate path here
         }
     }
 
