@@ -19,16 +19,19 @@ public class PointCloud : MonoBehaviour {
     }
 
     public void AddPoint(Vector3 hitPoint) {
-        Image newPointIcon = Instantiate(pointIcon, pointCloudHolder.transform);
-        newPointIcon.gameObject.SetActive(true);
-        hitPoint.x = RoundToNearest(resolutionDecreaseFactor, hitPoint.x);
-        hitPoint.z = RoundToNearest(resolutionDecreaseFactor, hitPoint.z);
 
-        newPointIcon.rectTransform.localPosition = new Vector3(hitPoint.x * scale, hitPoint.z * scale);
+        // Decrease resolution of fixed hit point
+        Vector2 fixedHitPoint = new Vector2();
+        fixedHitPoint.x = RoundToNearest(resolutionDecreaseFactor, hitPoint.x);
+        fixedHitPoint.y = RoundToNearest(resolutionDecreaseFactor, hitPoint.z);
 
-        Vector2 fixedHitPoint = new Vector2(hitPoint.x, hitPoint.z);
         if (!hitPoints.Contains(fixedHitPoint)) {
             hitPoints.Add(fixedHitPoint);
+
+            // UI for hit point
+            Image newPointIcon = Instantiate(pointIcon, pointCloudHolder.transform);
+            newPointIcon.gameObject.SetActive(true);
+            newPointIcon.rectTransform.localPosition = new Vector3(fixedHitPoint.x * scale, fixedHitPoint.y * scale);
         }
     }
 
