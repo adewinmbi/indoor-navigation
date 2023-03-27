@@ -99,8 +99,6 @@ public class AStar : MonoBehaviour {
                         newNode = new Node();
                         break;
                 }
-
-
             }
         }
     }
