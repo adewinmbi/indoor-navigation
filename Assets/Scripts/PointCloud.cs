@@ -8,8 +8,8 @@ public class PointCloud : MonoBehaviour {
     [SerializeField] private Image pointIcon;
     [SerializeField] private Image walkerIcon;
     [SerializeField] private Image pointCloudHolder;
-    private int scale = 17; // Just for display purposes
-    private int resolutionDecreaseFactor = 1; // Lidar points will be clamped to every X units vertically and horizontally
+    private readonly int scale = 17; // Just for display purposes
+    private readonly int resolutionDecreaseFactor = 1; // Lidar points will be clamped to every X units vertically and horizontally
     private List<Vector2> hitPoints = new List<Vector2>();
 
     public void UpdateWalkerPosition(Vector3 position) {
@@ -56,6 +56,14 @@ public class PointCloud : MonoBehaviour {
         } else {
             return upperBound;
         }
+    }
+
+    public List<Vector2> GetHitPoints() {
+        return hitPoints;
+    }
+
+    public int GetResolutionDecreaseFactor() {
+        return resolutionDecreaseFactor;
     }
 
 }
