@@ -62,7 +62,7 @@ public class AStar : MonoBehaviour {
                 Debug.Log(i);
 
                 Node newNode;
-                switch (i) {
+                switch (i) { // This shouldn't be plus 1, it should be plus nodeLength. Right now it doesn't matter because nodeLength is 1.
                     case 1:
                         newNode = new Node(new Vector2(qX, qY + 1)); // North
                         break;
