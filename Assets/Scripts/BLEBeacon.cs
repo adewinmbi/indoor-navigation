@@ -13,6 +13,6 @@ public class BLEBeacon : MonoBehaviour {
     void Update() {
         float dot = Vector3.Dot(transform.up, (watch.transform.position - transform.position).normalized);
         float distance = Vector3.Distance(transform.position, watch.transform.position);
-        displayText.text = beaconName + ": " + string.Format("{0:0.0#}", dot);
+        displayText.text = beaconName + ": " + string.Format("{0:0.0#}", dot * distance);
     }
 }

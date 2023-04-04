@@ -33,7 +33,7 @@ public class PointCloud : MonoBehaviour {
             newPointIcon.gameObject.SetActive(true);
             newPointIcon.rectTransform.localPosition = new Vector3(fixedHitPoint.x * scale, fixedHitPoint.y * scale);
 
-            Debug.Log("Lidar map has changed!");
+            // Debug.Log("Lidar map has changed!");
             // Regenerate path here
         }
     }
