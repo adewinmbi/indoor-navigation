@@ -7,6 +7,7 @@ public class WalkerMovement : MonoBehaviour {
     [SerializeField] private PointCloud pointCloud;
     [SerializeField] private Vector2 translationSpeed;
     [SerializeField] private float rotationSpeed;
+    [SerializeField] private BLENavigation bleNavigation;
 
     private void Update() {
         Vector2 translation = new Vector2();
@@ -35,6 +36,9 @@ public class WalkerMovement : MonoBehaviour {
         if (Input.GetKey(KeyCode.E)) {
             rotation = 1;
         }
+
+        // Enable rotation navigation when 'B' is held
+        bleNavigation.ToggleNavigation(Input.GetKey(KeyCode.B));
 
         translation *= Time.deltaTime * translationSpeed;
         rotation *= Time.deltaTime * rotationSpeed;

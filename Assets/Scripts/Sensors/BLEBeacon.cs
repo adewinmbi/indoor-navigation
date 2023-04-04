@@ -9,10 +9,18 @@ public class BLEBeacon : MonoBehaviour {
     [SerializeField] private string beaconName;
     [SerializeField] private Text displayText;
 
+    private float sensorReading = 0;
+
+    public float GetReading() {
+        return sensorReading;
+    }
+
     // Update is called once per frame
     void Update() {
         float dot = Vector3.Dot(transform.up, (watch.transform.position - transform.position).normalized);
         float distance = Vector3.Distance(transform.position, watch.transform.position);
-        displayText.text = beaconName + ": " + string.Format("{0:0.0#}", dot * distance);
+        sensorReading = dot * distance;
+
+        displayText.text = beaconName + ": " + string.Format("{0:0.0#}", sensorReading);
     }
 }
