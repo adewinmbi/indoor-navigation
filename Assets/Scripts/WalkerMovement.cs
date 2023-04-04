@@ -6,28 +6,40 @@ public class WalkerMovement : MonoBehaviour {
 
     [SerializeField] private PointCloud pointCloud;
     [SerializeField] private Vector2 translationSpeed;
-    [SerializeField] private double rotationSpeed;
+    [SerializeField] private float rotationSpeed;
 
     private void Update() {
         Vector2 translation = new Vector2();
-        if (Input.GetKey(KeyCode.UpArrow)) {
+        float rotation = 0;
+
+        if (Input.GetKey(KeyCode.W)) {
             translation.y = 1;
         }
 
-        if (Input.GetKey(KeyCode.DownArrow)) {
+        if (Input.GetKey(KeyCode.S)) {
             translation.y = -1;
         }
 
-        if (Input.GetKey(KeyCode.RightArrow)) {
+        if (Input.GetKey(KeyCode.D)) {
             translation.x = 1;
         }
 
-        if (Input.GetKey(KeyCode.LeftArrow)) {
+        if (Input.GetKey(KeyCode.A)) {
             translation.x = -1;
         }
 
+        if (Input.GetKey(KeyCode.Q)) {
+            rotation = -1;
+        }
+
+        if (Input.GetKey(KeyCode.E)) {
+            rotation = 1;
+        }
+
         translation *= Time.deltaTime * translationSpeed;
+        rotation *= Time.deltaTime * rotationSpeed;
         transform.Translate(new Vector3(translation.x, 0, translation.y));
+        transform.Rotate(Vector3.up, rotation);
 
         pointCloud.UpdateWalkerPosition(transform.position);
         pointCloud.ShiftPointCloud(transform.position);
