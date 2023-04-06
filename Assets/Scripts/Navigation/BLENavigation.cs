@@ -9,7 +9,7 @@ public class BLENavigation : MonoBehaviour {
     [SerializeField] private BLEBeacon beaconR;
     [SerializeField] private BLEBeacon beaconM;
     [SerializeField] private float rotationSpeed;
-    private readonly float tolerance = 0.1f;
+    private readonly float tolerance = 0.3f;
     private float rotation = 0;
     private Rigidbody rBody;
 
@@ -32,7 +32,7 @@ public class BLENavigation : MonoBehaviour {
         bool middleIsGreater = (beaconM.GetReading() > beaconL.GetReading()) && (beaconM.GetReading() > beaconR.GetReading());
         bool leftEqualsRight = InRange(beaconL.GetReading(), beaconR.GetReading(), tolerance);
 
-        Debug.Log("Middle largest: " + middleIsGreater + "\nLeftRight: " + leftEqualsRight);
+        // Debug.Log("Middle largest: " + middleIsGreater + "\nLeftRight: " + leftEqualsRight);
         return middleIsGreater && leftEqualsRight;
     }
 
