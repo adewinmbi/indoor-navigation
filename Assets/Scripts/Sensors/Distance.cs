@@ -21,11 +21,11 @@ public class Distance : MonoBehaviour {
 
             Vector3 currentHitPos = hit.point;
             currentDistance = Vector3.Distance(currentHitPos, transform.position);
-            Debug.Log(currentDistance);
-        } else {
-            // Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * 1000, Color.white);
-            //Debug.Log("Did not Hit");
         }
+    }
+
+    public float GetReading() {
+        return currentDistance;
     }
 
 }
