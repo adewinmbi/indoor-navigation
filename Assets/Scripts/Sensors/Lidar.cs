@@ -13,11 +13,11 @@ public class Lidar : MonoBehaviour {
     }
 
     void FixedUpdate() {
-        // Bit shift the index of the layer (8) to get a bit mask
+        // Bit shift the index of the layer (2) to get a bit mask
         int layerMask = 1 << 2;
 
-        // This would cast rays only against colliders in layer 8.
-        // But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
+        // This would cast rays only against colliders in layer 2.
+        // But instead we want to collide against everything except layer 2. The ~ operator does this, it inverts a bitmask.
         layerMask = ~layerMask;
 
         RaycastHit hit;
