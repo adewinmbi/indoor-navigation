@@ -55,7 +55,8 @@ public class BLENavigation : MonoBehaviour {
                 rotation = 1; // Turn right
             }
 
-            rBody.angularVelocity = Time.deltaTime * Vector3.up * (rotation * rotationSpeed);
+            // Clamp x and z rotation
+            transform.Rotate(Vector3.up, rotation);
         } else {
             rBody.angularVelocity = Vector3.zero; // Disable movement when at setpoint
         }
