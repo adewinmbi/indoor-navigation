@@ -11,11 +11,16 @@ public class PointCloud : MonoBehaviour {
     private readonly int scale = 17; // Just for display purposes
     private readonly int resolutionDecreaseFactor = 1; // Lidar points will be clamped to every X units vertically and horizontally
     private List<Vector2> hitPoints = new List<Vector2>();
+    private Vector2 walkerPointPosition = new Vector2();
 
     public void UpdateWalkerPosition(Vector3 position) {
         position.x = RoundToNearest(resolutionDecreaseFactor, position.x);
         position.z = RoundToNearest(resolutionDecreaseFactor, position.z);
-        walkerIcon.rectTransform.localPosition = new Vector3(position.x * scale, position.z * scale);
+
+        walkerPointPosition.x = position.x * scale;
+        walkerPointPosition.y = position.z * scale;
+
+        walkerIcon.rectTransform.localPosition = new Vector3(walkerPointPosition.x, walkerPointPosition.y);
     }
 
     public void AddPoint(Vector3 hitPoint) {

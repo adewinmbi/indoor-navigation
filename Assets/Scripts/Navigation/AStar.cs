@@ -1,4 +1,4 @@
-using System.Collections;
+/*using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,14 +18,13 @@ public class AStar : MonoBehaviour {
         public Node parent;
         public Vector2 position;
 
-        public Node() {
+        public Node(Vector2 position, Node parent) {
+            this.position = position;
+            this.parent = parent;
+
             f = 0; // g + h
             g = 0; // Cost to move from starting node to this node
             h = 0; // Cost to move from this node to final destination
-        }
-
-        public Node(Vector2 position) {
-            this.position = position;
         }
     }
 
@@ -36,7 +35,7 @@ public class AStar : MonoBehaviour {
         return nodeLength * (dX + dY) + (diagonalNodeDistance - (2 * nodeLength)) * Mathf.Min(new float[] {dX, dY});
     }
 
-    public void GeneratePath() {
+    public void GeneratePath(Vector2 goal) {
         List<Node> openList = new List<Node>();
         List<Node> closedList = new List<Node>();
 
@@ -58,49 +57,67 @@ public class AStar : MonoBehaviour {
             float qX = q.position.x;
             float qY = q.position.y;
 
-            for (int i = 8; i >= 1; i--) { // Generate the 8 successors
+            List<Node> successors = new List<Node>();
+            successors.Add(new Node(new Vector2(qX, qY + nodeLength))); // North
+            successors.Add(new Node(new Vector2(qX - nodeLength, qY + nodeLength))); // Northwest
+            successors.Add(new Node(new Vector2(qX + nodeLength, qY + nodeLength))); // Northeast
+            successors.Add(new Node(new Vector2(qX, qY - nodeLength))); // South
+            successors.Add(new Node(new Vector2(qX - nodeLength, qY - nodeLength))); // Southwest
+            successors.Add(new Node(new Vector2(qX + nodeLength, qY - nodeLength))); // Southeast
+            successors.Add(new Node(new Vector2(qX - nodeLength, qY))); // West
+            successors.Add(new Node(new Vector2(qX + nodeLength, qY))); // East
+
+            foreach (Node n in successors) {
+                n.SetParent(q);
+                if ()
+            }
+
+            *//*for (int i = 8; i >= 1; i--) { // Generate the 8 successors
                 Debug.Log(i);
 
-                Node newNode;
-                switch (i) { // This shouldn't be plus 1, it should be plus nodeLength. Right now it doesn't matter because nodeLength is 1.
+                
+
+                *//*Node newNode;
+                switch (i) {
                     case 1:
-                        newNode = new Node(new Vector2(qX, qY + 1)); // North
+                        newNode = new Node(new Vector2(qX, qY + nodeLength)); // North
                         break;
 
                     case 2:
-                        newNode = new Node(new Vector2(qX - 1, qY + 1)); // Northwest
+                        newNode = new Node(new Vector2(qX - nodeLength, qY + nodeLength)); // Northwest
                         break;
 
                     case 3:
-                        newNode = new Node(new Vector2(qX + 1, qY + 1)); // Northeast
+                        newNode = new Node(new Vector2(qX + nodeLength, qY + nodeLength)); // Northeast
                         break;
 
                     case 4:
-                        newNode = new Node(new Vector2(qX, qY - 1)); // South
+                        newNode = new Node(new Vector2(qX, qY - nodeLength)); // South
                         break;
 
                     case 5:
-                        newNode = new Node(new Vector2(qX - 1, qY - 1)); // Southwest
+                        newNode = new Node(new Vector2(qX - nodeLength, qY - nodeLength)); // Southwest
                         break;
 
                     case 6:
-                        newNode = new Node(new Vector2(qX + 1, qY - 1)); // Southeast
+                        newNode = new Node(new Vector2(qX + nodeLength, qY - nodeLength)); // Southeast
                         break;
 
                     case 7:
-                        newNode = new Node(new Vector2(qX - 1, qY)); // West
+                        newNode = new Node(new Vector2(qX - nodeLength, qY)); // West
                         break;
 
                     case 8:
-                        newNode = new Node(new Vector2(qX + 1, qY)); // East
+                        newNode = new Node(new Vector2(qX + nodeLength, qY)); // East
                         break;
 
                     default:
                         newNode = new Node();
                         break;
-                }
-            }
+                }*//*
+            }*//*
         }
     }
 
 }
+*/
