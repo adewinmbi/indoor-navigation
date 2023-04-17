@@ -8,19 +8,29 @@ public class PointCloud : MonoBehaviour {
     [SerializeField] private Image pointIcon;
     [SerializeField] private Image walkerIcon;
     [SerializeField] private Image pointCloudHolder;
+    [SerializeField] private GameObject watch;
     private readonly int scale = 17; // Just for display purposes
     private readonly int resolutionDecreaseFactor = 1; // Lidar points will be clamped to every X units vertically and horizontally
     private List<Vector2> hitPoints = new List<Vector2>();
     private Vector2 walkerPointPosition = new Vector2();
+    private Vector2 watchPointPosition = new Vector2();
+
+    private void Start() {
+        // Turn watch position into a point position
+        watchPointPosition = WorldToPoint(watch.transform.position);
+    }
+
+    private Vector2 WorldToPoint(Vector3 worldPos) {
+        Vector2 pointPos = new Vector2();
+        pointPos.x = RoundToNearest(resolutionDecreaseFactor, worldPos.x) * scale;
+        pointPos.y = RoundToNearest(resolutionDecreaseFactor, worldPos.z) * scale;
+
+        return pointPos;
+    }
 
     public void UpdateWalkerPosition(Vector3 position) {
-        position.x = RoundToNearest(resolutionDecreaseFactor, position.x);
-        position.z = RoundToNearest(resolutionDecreaseFactor, position.z);
-
-        walkerPointPosition.x = position.x * scale;
-        walkerPointPosition.y = position.z * scale;
-
-        walkerIcon.rectTransform.localPosition = new Vector3(walkerPointPosition.x, walkerPointPosition.y);
+        Vector2 pointPos = WorldToPoint(position);
+        walkerIcon.rectTransform.localPosition = new Vector3(pointPos.x, pointPos.y);
     }
 
     public void AddPoint(Vector3 hitPoint) {
@@ -34,14 +44,20 @@ public class PointCloud : MonoBehaviour {
             hitPoints.Add(fixedHitPoint);
 
             // UI for hit point
-            Image newPointIcon = Instantiate(pointIcon, pointCloudHolder.transform);
-            newPointIcon.gameObject.SetActive(true);
-            newPointIcon.rectTransform.localPosition = new Vector3(fixedHitPoint.x * scale, fixedHitPoint.y * scale);
+            DrawPoint(fixedHitPoint, Color.red);
 
             // Debug.Log("Lidar map has changed!");
             // Regenerate path here
         }
     }
+
+    public void DrawPoint(Vector2 point, Color color) {
+        Image newPointIcon = Instantiate(pointIcon, pointCloudHolder.transform);
+        newPointIcon.gameObject.SetActive(true);
+        newPointIcon.rectTransform.localPosition = new Vector3(point.x * scale, point.y * scale);
+        newPointIcon.color = color;
+    }
+
 
     public void ShiftPointCloud(Vector3 walkerDisplacement) {
         pointCloudHolder.rectTransform.localPosition = new Vector3(walkerDisplacement.x * -scale, walkerDisplacement.z * -scale);
@@ -69,6 +85,14 @@ public class PointCloud : MonoBehaviour {
 
     public int GetResolutionDecreaseFactor() {
         return resolutionDecreaseFactor;
+    }
+
+    public Vector2 getWalkerPointPosition() {
+        return walkerPointPosition;
+    }
+
+    public Vector2 getWatchPointPosition() {
+        return watchPointPosition;
     }
 
 }
