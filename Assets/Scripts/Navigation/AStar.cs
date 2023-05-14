@@ -54,11 +54,10 @@ public class AStar : MonoBehaviour {
     /*private List<Node> RegeneratePath(Node start, Node current) {
 
     }*/
-    int hasbeendone = 0;
     public void GeneratePath(Vector2 start, Vector2 goal) {
+        int hasbeendone = 0;
         List<Node> openList = new List<Node>();
         List<Node> closedList = new List<Node>();
-        List<Node> path = new List<Node>();
 
         // Initialize starting node
         Node startingNode = new Node(start); // Node that the walker is currently on
@@ -69,12 +68,12 @@ public class AStar : MonoBehaviour {
         Node q = startingNode; // Current node
 
         while (openList.Count > 0) {
-            if (hasbeendone > 30) {
+            if (hasbeendone > 50) {
                 return;
             }
 
             foreach (Node node in openList) { // Find the node with the smallest f
-                if (node.f < q.f) {
+                if (node.f < q.f || node.f == q.f && node.h < q.h) {
                     q = node;
                 }
             }
@@ -83,7 +82,7 @@ public class AStar : MonoBehaviour {
             closedList.Add(q);
             pointCloud.DrawPoint(pointCloud.PointToWorld(q.position), Color.grey);
 
-            if (q.position == goal) {
+            if (q.position.Equals(goal)) {
                 RetracePath(startingNode, q);
                 return;
             }
@@ -120,7 +119,7 @@ public class AStar : MonoBehaviour {
             //}
 
             foreach (Node successor in successors) {
-                if (closedList.Contains(successor) || pointCloud.IsObstacle(successor.position)) {
+                if (closedList.Contains(successor) || pointCloud.IsObstacle(pointCloud.PointToWorld(successor.position))) {
                     continue;
                 }
 
@@ -131,13 +130,14 @@ public class AStar : MonoBehaviour {
 
                 if (!openList.Contains(successor) || tentativeG < successor.g) {
                     successor.g = tentativeG;
-                    successor.f = successor.g + DiagonalDistance(successor.position, goal);
+                    successor.h = DiagonalDistance(successor.position, goal);
+                    successor.f = successor.g + successor.h;
                     successor.SetParent(q);
                     // pointCloud.DrawDebugPoint(successor.position, Color.green, Mathf.Round(successor.f).ToString());
                     
                     if (!openList.Contains(successor)) {
                         openList.Add(successor);
-                        pointCloud.DrawDebugPoint(pointCloud.PointToWorld(successor.position), Color.green, Mathf.Round(successor.position.x).ToString());
+                        pointCloud.DrawDebugPoint(pointCloud.PointToWorld(successor.position), Color.green, Mathf.Round(successor.f).ToString());
                     }
                 }
                 
@@ -181,7 +181,7 @@ public class AStar : MonoBehaviour {
         path.Reverse();
 
         foreach (Node n in path) {
-            // pointCloud.DrawPoint(n.position, Color.cyan);
+            pointCloud.DrawPoint(pointCloud.PointToWorld(n.position), Color.cyan);
         }
     }
 

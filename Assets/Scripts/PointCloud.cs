@@ -37,7 +37,7 @@ public class PointCloud : MonoBehaviour {
 
     public void UpdateWalkerPosition(Vector3 position) {
         Vector2 pointPos = WorldToPoint(position);
-        Debug.Log(pointPos);
+        walkerPointPosition = pointPos;
         walkerIcon.rectTransform.localPosition = new Vector3(pointPos.x, pointPos.y);
     }
 
