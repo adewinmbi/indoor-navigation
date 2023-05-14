@@ -9,6 +9,7 @@ public class PointCloud : MonoBehaviour {
     [SerializeField] private Image walkerIcon;
     [SerializeField] private Image pointCloudHolder;
     [SerializeField] private GameObject watch;
+    [SerializeField] private GameObject debugPointIcon;
     private readonly int scale = 17; // Just for display purposes
     private readonly int resolutionDecreaseFactor = 1; // Lidar points will be clamped to every X units vertically and horizontally
     private List<Vector2> hitPoints = new List<Vector2>();
@@ -18,9 +19,11 @@ public class PointCloud : MonoBehaviour {
     private void Start() {
         // Turn watch position into a point position
         watchPointPosition = WorldToPoint(watch.transform.position);
+        DrawPoint(watchPointPosition, Color.black);
+        Debug.Log(watchPointPosition);
     }
 
-    private Vector2 WorldToPoint(Vector3 worldPos) {
+    public Vector2 WorldToPoint(Vector3 worldPos) {
         Vector2 pointPos = new Vector2();
         pointPos.x = RoundToNearest(resolutionDecreaseFactor, worldPos.x) * scale;
         pointPos.y = RoundToNearest(resolutionDecreaseFactor, worldPos.z) * scale;
@@ -28,8 +31,13 @@ public class PointCloud : MonoBehaviour {
         return pointPos;
     }
 
+    public Vector2 PointToWorld(Vector2 point) {
+        return new Vector2(point.x / 17, point.y / 17);
+    }
+
     public void UpdateWalkerPosition(Vector3 position) {
         Vector2 pointPos = WorldToPoint(position);
+        Debug.Log(pointPos);
         walkerIcon.rectTransform.localPosition = new Vector3(pointPos.x, pointPos.y);
     }
 
@@ -58,6 +66,17 @@ public class PointCloud : MonoBehaviour {
         newPointIcon.color = color;
     }
 
+    public void DrawDebugPoint(Vector2 point, Color color, string message) {
+        GameObject newPoint = Instantiate(debugPointIcon, pointCloudHolder.transform);
+        Image newPointIcon = newPoint.GetComponent<Image>();
+        newPointIcon.gameObject.SetActive(true);
+        newPointIcon.rectTransform.localPosition = new Vector3(point.x * scale, point.y * scale);
+        newPointIcon.color = color;
+
+        Text newPointText = newPoint.transform.Find("Text").GetComponent<Text>();
+        newPointText.text = message;
+    }
+
 
     public void ShiftPointCloud(Vector3 walkerDisplacement) {
         pointCloudHolder.rectTransform.localPosition = new Vector3(walkerDisplacement.x * -scale, walkerDisplacement.z * -scale);
@@ -79,12 +98,20 @@ public class PointCloud : MonoBehaviour {
         }
     }
 
+    public bool IsObstacle(Vector2 point) {
+        return hitPoints.Contains(point);
+    }
+
     public List<Vector2> GetHitPoints() {
         return hitPoints;
     }
 
     public int GetResolutionDecreaseFactor() {
         return resolutionDecreaseFactor;
+    }
+
+    public int GetScale() {
+        return scale;
     }
 
     public Vector2 getWalkerPointPosition() {
