@@ -36,7 +36,7 @@ public class Rotate : MonoBehaviour {
     /// </summary>
     /// <returns>Returns true if one full rotation has passed since InitRotationCounter was called.</returns>
     public bool FullRotation() {
-        return true;
+        return !(rotationCounter == 0);
     }
 
 }
