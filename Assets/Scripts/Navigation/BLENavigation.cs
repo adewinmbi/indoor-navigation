@@ -60,7 +60,7 @@ public class BLENavigation : MonoBehaviour {
     }
 
     // Check if value is within a tolerance of its target.
-    private bool InRange(float value, float target, float tolerance) {
+    public static bool InRange(float value, float target, float tolerance) {
         float upperBound = target + tolerance;
         float lowerBound = target - tolerance;
 
@@ -68,7 +68,7 @@ public class BLENavigation : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        Debug.Log(walkerState);
+        // Debug.Log(walkerState);
 
         if (navEnabled && !AtSetpoint() && walkerState != WalkerState.DirectDrive) {
             walkerState = WalkerState.BLEDrive;
@@ -94,7 +94,9 @@ public class BLENavigation : MonoBehaviour {
                 walkerState = WalkerState.Arrived;
             }
         } else if (navEnabled && walkerState == WalkerState.LidarDrive) {
+            if (!AtSetpoint()) {
 
+            }
         } else { // Navigation disabled
             walkerState = WalkerState.Idle;
             rBody.angularVelocity = Vector3.zero; // Disable movement when at setpoint
