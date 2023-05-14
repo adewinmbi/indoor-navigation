@@ -5,6 +5,7 @@ using UnityEngine;
 public class Distance : MonoBehaviour {
 
     private float currentDistance = 0;
+    public readonly float distanceTolerance = 3; // Distance away the walker should stop from the watch.
 
     void FixedUpdate() {
         // Bit shift the index of the layer (2) to get a bit mask
