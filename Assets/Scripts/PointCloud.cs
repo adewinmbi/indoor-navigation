@@ -20,7 +20,6 @@ public class PointCloud : MonoBehaviour {
         // Turn watch position into a point position
         watchPointPosition = WorldToPoint(watch.transform.position);
         DrawPoint(watchPointPosition, Color.black);
-        Debug.Log(watchPointPosition);
     }
 
     public Vector2 WorldToPoint(Vector3 worldPos) {
