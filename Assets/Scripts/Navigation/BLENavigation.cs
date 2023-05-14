@@ -16,7 +16,16 @@ public class BLENavigation : MonoBehaviour {
     private Rigidbody rBody;
 
     private bool navEnabled = false; // When true, navigation algorithm is activated.
-    private bool clearPath = false;
+
+    private enum WalkerState {
+        DirectDrive,
+        BLEDrive,
+        LidarDrive,
+        Idle,
+        Arrived
+    }
+
+    private WalkerState walkerState = WalkerState.Idle;
 
     private void Start() {
         rBody = GetComponent<Rigidbody>();
@@ -35,16 +44,15 @@ public class BLENavigation : MonoBehaviour {
         bool middleIsGreater = (beaconM.GetReading() > beaconL.GetReading()) && (beaconM.GetReading() > beaconR.GetReading());
         bool leftEqualsRight = InRange(beaconL.GetReading(), beaconR.GetReading(), tolerance);
 
-        // Debug.Log("Middle largest: " + middleIsGreater + "\nLeftRight: " + leftEqualsRight);
         bool result = middleIsGreater && leftEqualsRight;
         if (result) { 
             
             // Condition to switch to lidar navigation.
             if (beaconM.GetReading() > distanceSensor.GetReading() + 1) { // 1 is a tolerance, as if no obstacles are present, the beacon and distance readings are extremely close.
-                Debug.Log(Mathf.Round(beaconM.GetReading()) + " " + Mathf.Round(distanceSensor.GetReading()) + "Switch to lidar nav");
+                walkerState = WalkerState.LidarDrive;
 
             } else { // Condition to drive straight towards watch
-                clearPath = true;
+                walkerState = WalkerState.DirectDrive;
             }
         }
 
@@ -60,7 +68,11 @@ public class BLENavigation : MonoBehaviour {
     }
 
     private void FixedUpdate() {
-        if (navEnabled && !AtSetpoint() && !clearPath) {
+        Debug.Log(walkerState);
+
+        if (navEnabled && !AtSetpoint() && walkerState != WalkerState.DirectDrive) {
+            walkerState = WalkerState.BLEDrive;
+
             // This could be replaced with a control loop in real life
             if (beaconL.GetReading() > beaconR.GetReading()) {
                 rotation = -1; // Turn left
@@ -73,17 +85,18 @@ public class BLENavigation : MonoBehaviour {
             // Clamp x and z rotation
             transform.Rotate(Vector3.up, rotation);
 
-        } else if (navEnabled && clearPath) { // Direct drive
+        } else if (navEnabled && walkerState == WalkerState.DirectDrive) { // Direct drive
             if (distanceSensor.GetReading() > distanceSensor.distanceTolerance) {
                 Vector3 translation = Vector3.forward;
                 translation *= Time.deltaTime * 5;
-
-                Debug.Log(translation);
                 transform.Translate(translation);
             } else {
-                Debug.Log("Arrived!");
+                walkerState = WalkerState.Arrived;
             }
+        } else if (navEnabled && walkerState == WalkerState.LidarDrive) {
+
         } else { // Navigation disabled
+            walkerState = WalkerState.Idle;
             rBody.angularVelocity = Vector3.zero; // Disable movement when at setpoint
         }
     }
