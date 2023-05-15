@@ -23,18 +23,16 @@ public class Rotate : MonoBehaviour {
         if (BLENavigation.InRange(eulerRotation.y, 180, 5)) {
             rotationCountDebounce = true;
         }
-
-        Debug.Log(rotationCounter);
     }
 
-    public void InitRotationCounter() {
+    public void ResetRotationCounter() {
         rotationCounter = 0;
     }
 
     /// <summary>
     /// Keeps track of if a full rotation has occurred.
     /// </summary>
-    /// <returns>Returns true if one full rotation has passed since InitRotationCounter was called.</returns>
+    /// <returns>Returns true if one full rotation has passed since ResetRotationCounter was called.</returns>
     public bool FullRotation() {
         return !(rotationCounter == 0);
     }
