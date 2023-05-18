@@ -96,6 +96,13 @@ public class AStar : MonoBehaviour {
             if (q.position.Equals(goal)) {
                 RetracePath(startingNode, q);
                 return;
+            } else {
+                foreach (Node n in GetSuccessors(new Node(goal))) {
+                    if (q.position.Equals(n.position)) {
+                        RetracePath(startingNode, q);
+                        return;
+                    }
+                }
             }
 
             List<Node> successors = GetSuccessors(q);
