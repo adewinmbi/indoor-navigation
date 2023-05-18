@@ -45,6 +45,25 @@ public class AStar : MonoBehaviour {
         return Vector2.Distance(a, b);
     }
 
+    // Get neighbors of a node
+    private List<Node> GetSuccessors(Node parent) {
+        float parentX = parent.position.x;
+        float parentY = parent.position.y;
+
+        // Note: Can be optimized because we are generating successors even if we have already reached the goal. Or, generate neighbor on grid generation.
+        List<Node> successors = new List<Node>();
+        successors.Add(new Node(new Vector2(parentX, parentY + nodeLength))); // North
+        successors.Add(new Node(new Vector2(parentX - nodeLength, parentY + nodeLength))); // Northwest
+        successors.Add(new Node(new Vector2(parentX + nodeLength, parentY + nodeLength))); // Northeast
+        successors.Add(new Node(new Vector2(parentX, parentY - nodeLength))); // South
+        successors.Add(new Node(new Vector2(parentX - nodeLength, parentY - nodeLength))); // Southwest
+        successors.Add(new Node(new Vector2(parentX + nodeLength, parentY - nodeLength))); // Southeast
+        successors.Add(new Node(new Vector2(parentX - nodeLength, parentY))); // West
+        successors.Add(new Node(new Vector2(parentX + nodeLength, parentY))); // East
+
+        return successors;
+    }
+
     public void GeneratePath(Vector2 start, Vector2 goal) {
         int maxIterations = 99; // Arbitrary value
         List<Node> openList = new List<Node>();
@@ -63,6 +82,7 @@ public class AStar : MonoBehaviour {
                 return;
             }
 
+            q = openList[0];
             foreach (Node node in openList) { // Find the node with the smallest f
                 if (node.f < q.f || node.f == q.f && node.h < q.h) {
                     q = node;
@@ -78,7 +98,8 @@ public class AStar : MonoBehaviour {
                 return;
             }
 
-            float qX = q.position.x;
+            List<Node> successors = GetSuccessors(q);
+            /*float qX = q.position.x;
             float qY = q.position.y;
 
             // Note: Can be optimized because we are generating successors even if we have already reached the goal. Or, generate neighbor on grid generation.
@@ -90,7 +111,7 @@ public class AStar : MonoBehaviour {
             successors.Add(new Node(new Vector2(qX - nodeLength, qY - nodeLength))); // Southwest
             successors.Add(new Node(new Vector2(qX + nodeLength, qY - nodeLength))); // Southeast
             successors.Add(new Node(new Vector2(qX - nodeLength, qY))); // West
-            successors.Add(new Node(new Vector2(qX + nodeLength, qY))); // East
+            successors.Add(new Node(new Vector2(qX + nodeLength, qY))); // East*/
 
             foreach (Node successor in successors) {
                 successor.g = DistanceBetween(successor.position, q.position) + q.g;

@@ -67,11 +67,11 @@ public class BLENavigation : MonoBehaviour {
         return (value > lowerBound) && (value < upperBound);
     }
 
-    int debug = 0;
+    int fullLidarRotations = 0;
     private bool lidarDebounce = false;
     private void FixedUpdate() {
         // Debug.Log(walkerState);
-        Debug.Log(walkerState.ToString() + " " + debug.ToString());
+        Debug.Log(walkerState.ToString() + " " + fullLidarRotations.ToString());
 
         if (navEnabled && !AtSetpoint() && walkerState != WalkerState.DirectDrive && walkerState != WalkerState.LidarDrive) {
             walkerState = WalkerState.BLEDrive;
@@ -111,7 +111,7 @@ public class BLENavigation : MonoBehaviour {
                     if (lidarRotate.FullRotation()) {
                         // Generate A* path.
                         // Navigate to next point in path.
-                        debug++;
+                        fullLidarRotations++;
                         lidarDebounce = true;
                     }
                 }
@@ -120,7 +120,7 @@ public class BLENavigation : MonoBehaviour {
                 if (lidarRotate.FullRotation()) {
                     // Generate A* path.
                     // Navigate to next point in path.
-                    debug++;
+                    fullLidarRotations++;
                     lidarDebounce = true;
                 }
             }
