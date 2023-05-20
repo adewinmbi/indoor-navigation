@@ -8,15 +8,16 @@ public class PointCloud : MonoBehaviour {
     [SerializeField] private Image pointIcon;
     [SerializeField] private Image walkerIcon;
     [SerializeField] private Image pointCloudHolder;
+    [SerializeField] private Image pointCloudHolderPrefab;
     [SerializeField] private GameObject watch;
     [SerializeField] private GameObject debugPointIcon;
-    // [SerializeField] private GameObject pointCloudHolderParent;
+    [SerializeField] private GameObject pointCloudHolderParent;
     private readonly int scale = 17; // Just for display purposes
     private readonly int resolutionDecreaseFactor = 1; // Lidar points will be clamped to every X units vertically and horizontally
     private List<Vector2> hitPoints = new List<Vector2>();
     private Vector2 walkerPointPosition = new Vector2();
     private Vector2 watchPointPosition = new Vector2();
-    // private Dictionary<string, List<Vector2>> pointCloudGroups = new Dictionary<string, List<Vector2>>();
+    private Dictionary<string, List<Vector2>> pointCloudGroups = new Dictionary<string, List<Vector2>>();
 
     private void Start() {
         // Turn watch position into a point position
@@ -67,21 +68,44 @@ public class PointCloud : MonoBehaviour {
         newPointIcon.color = color;
     }
 
-    /*public void DrawPoint(Vector2 point, Color color, string pointCloudGroupName) {
-        Image pointCloudGroupHolder;
+    public void DrawPoint(Vector2 point, Color color, string pointCloudGroupName) {
+        GameObject pointCloudGroupHolder;
 
-        if (!pointCloudGroups.ContainsKey(pointCloudGroupName)) { // Add to point cloud group
-            pointCloudGroupHolder = Instantiate(pointCloudHolder, pointCloudHolderParent.transform);
+        // Find parent object
+        if (!pointCloudGroups.ContainsKey(pointCloudGroupName)) {
+            pointCloudGroupHolder = Instantiate(pointCloudHolderPrefab.gameObject, pointCloudHolderParent.transform);
             pointCloudGroupHolder.name = pointCloudGroupName;
+            pointCloudGroups.Add(pointCloudGroupName, new List<Vector2>());
         } else {
-
+            pointCloudGroupHolder = pointCloudHolderParent.transform.Find(pointCloudGroupName).gameObject;
         }
 
-        Image newPointIcon = Instantiate(pointIcon, pointCloudHolder.transform);
+        Image newPointIcon = Instantiate(pointIcon, pointCloudGroupHolder.transform);
         newPointIcon.gameObject.SetActive(true);
         newPointIcon.rectTransform.localPosition = new Vector3(point.x * scale, point.y * scale);
+        pointCloudGroups[pointCloudGroupName].Add(point); // Add point to vector 2 dictionary
         newPointIcon.color = color;
-    }*/
+        // Debug.Log(newPointIcon != null);
+    }
+
+    public void AddPoint() {
+
+    }
+
+    public void RemoveAllPoints(string pointCloudGroupName) {
+        if (!pointCloudGroups.ContainsKey(pointCloudGroupName)) {
+            Debug.LogWarning("Could not find point cloud group with given name!");
+            return;
+        }
+
+        // Destroy all children.
+        foreach (Transform child in pointCloudHolderParent.transform.Find(pointCloudGroupName).transform) {
+            Destroy(child.gameObject);
+        }
+
+        //Destroy(pointCloudHolderParent.transform.Find(pointCloudGroupName).transform.gameObject);
+        //pointCloudGroups.Remove(pointCloudGroupName);
+    }
 
     public void DrawDebugPoint(Vector2 point, Color color, string message) {
         GameObject newPoint = Instantiate(debugPointIcon, pointCloudHolder.transform);
@@ -94,9 +118,12 @@ public class PointCloud : MonoBehaviour {
         newPointText.text = message;
     }
 
-
+    // Very bad performance, calling GetComponent every frame
     public void ShiftPointCloud(Vector3 walkerDisplacement) {
         pointCloudHolder.rectTransform.localPosition = new Vector3(walkerDisplacement.x * -scale, walkerDisplacement.z * -scale);
+        foreach (Transform pCGroupHolder in pointCloudHolderParent.transform) {
+            pCGroupHolder.GetComponent<Image>().rectTransform.localPosition = new Vector3(walkerDisplacement.x * -scale, walkerDisplacement.z * -scale);
+        }
     }
 
     /// <summary>
