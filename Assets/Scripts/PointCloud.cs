@@ -10,11 +10,13 @@ public class PointCloud : MonoBehaviour {
     [SerializeField] private Image pointCloudHolder;
     [SerializeField] private GameObject watch;
     [SerializeField] private GameObject debugPointIcon;
+    // [SerializeField] private GameObject pointCloudHolderParent;
     private readonly int scale = 17; // Just for display purposes
     private readonly int resolutionDecreaseFactor = 1; // Lidar points will be clamped to every X units vertically and horizontally
     private List<Vector2> hitPoints = new List<Vector2>();
     private Vector2 walkerPointPosition = new Vector2();
     private Vector2 watchPointPosition = new Vector2();
+    // private Dictionary<string, List<Vector2>> pointCloudGroups = new Dictionary<string, List<Vector2>>();
 
     private void Start() {
         // Turn watch position into a point position
@@ -64,6 +66,22 @@ public class PointCloud : MonoBehaviour {
         newPointIcon.rectTransform.localPosition = new Vector3(point.x * scale, point.y * scale);
         newPointIcon.color = color;
     }
+
+    /*public void DrawPoint(Vector2 point, Color color, string pointCloudGroupName) {
+        Image pointCloudGroupHolder;
+
+        if (!pointCloudGroups.ContainsKey(pointCloudGroupName)) { // Add to point cloud group
+            pointCloudGroupHolder = Instantiate(pointCloudHolder, pointCloudHolderParent.transform);
+            pointCloudGroupHolder.name = pointCloudGroupName;
+        } else {
+
+        }
+
+        Image newPointIcon = Instantiate(pointIcon, pointCloudHolder.transform);
+        newPointIcon.gameObject.SetActive(true);
+        newPointIcon.rectTransform.localPosition = new Vector3(point.x * scale, point.y * scale);
+        newPointIcon.color = color;
+    }*/
 
     public void DrawDebugPoint(Vector2 point, Color color, string message) {
         GameObject newPoint = Instantiate(debugPointIcon, pointCloudHolder.transform);
