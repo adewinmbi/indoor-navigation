@@ -71,7 +71,7 @@ public class BLENavigation : MonoBehaviour {
     private bool lidarDebounce = false;
     private void FixedUpdate() {
         // Debug.Log(walkerState);
-        Debug.Log(walkerState.ToString() + " " + fullLidarRotations.ToString());
+        // Debug.Log(walkerState.ToString() + " " + fullLidarRotations.ToString());
 
         if (navEnabled && !AtSetpoint() && walkerState != WalkerState.DirectDrive && walkerState != WalkerState.LidarDrive) {
             walkerState = WalkerState.BLEDrive;

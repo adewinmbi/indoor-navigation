@@ -91,7 +91,7 @@ public class AStar : MonoBehaviour {
 
             openList.Remove(q); // Remove q from the open list
             closedList.Add(q);
-            pointCloud.DrawPoint(pointCloud.PointToWorld(q.position), Color.grey);
+            pointCloud.DrawPoint(pointCloud.PointToWorld(q.position), Color.grey, "AStarPath");
 
             if (q.position.Equals(goal)) {
                 RetracePath(startingNode, q);
@@ -140,7 +140,7 @@ public class AStar : MonoBehaviour {
                     
                     if (!openList.Contains(successor)) {
                         openList.Add(successor);
-                        pointCloud.DrawDebugPoint(pointCloud.PointToWorld(successor.position), Color.green, Mathf.Round(successor.f).ToString());
+                        pointCloud.DrawPoint(pointCloud.PointToWorld(successor.position), Color.green, "AStarPath");
                     }
                 }
             }
@@ -162,11 +162,12 @@ public class AStar : MonoBehaviour {
         path.Reverse();
 
         foreach (Node n in path) {
-            pointCloud.DrawPoint(pointCloud.PointToWorld(n.position), Color.cyan);
+            pointCloud.DrawPoint(pointCloud.PointToWorld(n.position), Color.cyan, "AStarPath");
         }
     }
 
     public void RunAStar() {
+        pointCloud.RemoveAllPoints("AStarPath");
         GeneratePath(pointCloud.getWalkerPointPosition(), pointCloud.getWatchPointPosition());
     }
 
