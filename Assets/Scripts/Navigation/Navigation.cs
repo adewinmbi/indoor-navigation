@@ -12,7 +12,8 @@ public class Navigation : MonoBehaviour {
     [SerializeField] private BLEBeacon beaconR;
     [SerializeField] private BLEBeacon beaconM;
     [SerializeField] private float rotationSpeed;
-    private readonly float tolerance = 0.3f;
+    private readonly float bleRotationTolerance = 0.3f;
+    private readonly float bleProximityTolerance = 3;
     private readonly float movementSpeed = 5;
     private float rotation = 0;
     private Rigidbody rBody;
@@ -45,7 +46,7 @@ public class Navigation : MonoBehaviour {
     // Return true when middle is greater than both left and right, and left and right are within tolerance of eachother (nearly the same value).
     private bool AtSetpoint() {
         bool middleIsGreater = (beaconM.GetReading() > beaconL.GetReading()) && (beaconM.GetReading() > beaconR.GetReading());
-        bool leftEqualsRight = InRange(beaconL.GetReading(), beaconR.GetReading(), tolerance);
+        bool leftEqualsRight = InRange(beaconL.GetReading(), beaconR.GetReading(), bleRotationTolerance);
 
         bool result = middleIsGreater && leftEqualsRight;
         if (result) { 
@@ -106,32 +107,24 @@ public class Navigation : MonoBehaviour {
                     lidarDebounce = false;
                 }
 
-                if (AtSetpoint()) { // Case in which walker is lidar navigating, and it is aligned with the watch. 
-                    if (beaconM.GetReading() <= distanceSensor.GetReading() + 1) {
-                        walkerState = WalkerState.DirectDrive;
-                    } else {
-                        // Next point
-                        if (lidarRotate.FullRotation()) {
-                            aStar.GeneratePath();
+                if (lidarRotate.FullRotation()) {
+                    aStar.GeneratePath();
 
-                            // Navigate to next point in path. (using yield return StartCoroutine)
-                            yield return new WaitUntil(() => aStar.MoveToNextPoint(movementSpeed));
-                            fullLidarRotations++;
-                            lidarDebounce = true;
-                        }
-                    }
-                } else {
-                    // next point
-                    if (lidarRotate.FullRotation()) {
-                        aStar.GeneratePath();
+                    // Navigate to next point in path. (using yield return StartCoroutine)
+                    yield return new WaitUntil(() => aStar.MoveToNextPoint(movementSpeed));
 
-                        // Navigate to next point in path. (using yield return StartCoroutine)
-                        yield return new WaitUntil(() => aStar.MoveToNextPoint(movementSpeed));
-                        fullLidarRotations++;
-                        lidarDebounce = true;
+                    if (navEnabled && (beaconL.GetReading() < bleProximityTolerance
+                        && beaconM.GetReading() < bleProximityTolerance
+                        && beaconR.GetReading() < bleProximityTolerance)) {
+                        /*When using A* navigation, there is rarely a time when the walker is directly aligned 
+                            * with the watch enough to go into direct drive mode. So, this uses beacons to check for proximity to turn off the walker. */
+                        walkerState = WalkerState.Arrived;
+
                     }
+
+                fullLidarRotations++;
+                    lidarDebounce = true;
                 }
-
             } else { // Navigation disabled
                 walkerState = WalkerState.Idle;
                 rBody.angularVelocity = Vector3.zero; // Disable movement when at setpoint
@@ -140,72 +133,5 @@ public class Navigation : MonoBehaviour {
             yield return new WaitForSeconds(Time.deltaTime);
         }
     }
-
-    /*private void FixedUpdate() {
-        // Debug.Log(walkerState);
-        // Debug.Log(walkerState.ToString() + " " + fullLidarRotations.ToString());
-
-        if (navEnabled && !AtSetpoint() && walkerState != WalkerState.DirectDrive && walkerState != WalkerState.LidarDrive) {
-            walkerState = WalkerState.BLEDrive;
-
-            // This could be replaced with a control loop in real life
-            if (beaconL.GetReading() > beaconR.GetReading()) {
-                rotation = -1; // Turn left
-            }
-
-            if (beaconR.GetReading() > beaconL.GetReading()) {
-                rotation = 1; // Turn right
-            }
-
-            // Clamp x and z rotation
-            transform.Rotate(Vector3.up, rotation);
-
-        } else if (navEnabled && walkerState == WalkerState.DirectDrive) { // Direct drive
-            if (distanceSensor.GetReading() > distanceSensor.distanceTolerance) {
-                Vector3 translation = Vector3.forward;
-                translation *= Time.deltaTime * 5;
-                transform.Translate(translation);
-            } else {
-                walkerState = WalkerState.Arrived;
-                Debug.Log("Arrived!");
-            }
-
-        } else if (navEnabled && walkerState == WalkerState.LidarDrive) { // Lidar drive
-            if (lidarDebounce) {
-                lidarRotate.ResetRotationCounter();
-                lidarDebounce = false;
-            }
-
-            if (AtSetpoint()) { // Case in which walker is lidar navigating, and it is aligned with the watch. 
-                if (beaconM.GetReading() <= distanceSensor.GetReading() + 1) {
-                    walkerState = WalkerState.DirectDrive;
-                } else {
-                    // Next point
-                    if (lidarRotate.FullRotation()) {
-                        // Generate A* path.
-                        aStar.GeneratePath();
-
-                        // Navigate to next point in path.
-                        fullLidarRotations++;
-                        lidarDebounce = true;
-                    }
-                }
-            } else {
-                // next point
-                if (lidarRotate.FullRotation()) {
-                    // Generate A* path.
-                    aStar.GeneratePath();
-
-                    // Navigate to next point in path.
-                    fullLidarRotations++;
-                    lidarDebounce = true;
-                }
-            }
-
-        } else { // Navigation disabled
-            walkerState = WalkerState.Idle;
-            rBody.angularVelocity = Vector3.zero; // Disable movement when at setpoint
-        }
-    }*/
 
 }
