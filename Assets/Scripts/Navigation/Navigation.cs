@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Navigation : MonoBehaviour {
@@ -12,6 +13,7 @@ public class Navigation : MonoBehaviour {
     [SerializeField] private BLEBeacon beaconR;
     [SerializeField] private BLEBeacon beaconM;
     [SerializeField] private float rotationSpeed;
+    [SerializeField] private Text walkerStatusUpdate;
     private readonly float bleRotationTolerance = 0.3f;
     private readonly float bleProximityTolerance = 3;
     private readonly float movementSpeed = 5;
@@ -75,7 +77,9 @@ public class Navigation : MonoBehaviour {
     private bool lidarDebounce = false;
     private IEnumerator RunNavigation() {
         while (true) { // For debug purposes
-        //while (walkerState != WalkerState.Arrived) {
+                       //while (walkerState != WalkerState.Arrived) {
+
+            walkerStatusUpdate.text = " Walker State: " + walkerState + " ";
             if (navEnabled && !AtSetpoint() && walkerState != WalkerState.DirectDrive && walkerState != WalkerState.LidarDrive) {
                 walkerState = WalkerState.BLEDrive;
 
