@@ -1155,6 +1155,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e67958cd672a34443a6e83bb69b5c73a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  aStar: {fileID: 1003979027}
   lidarRotate: {fileID: 1397903797}
   distanceSensor: {fileID: 1228936487}
   beaconL: {fileID: 1124262305}
