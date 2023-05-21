@@ -173,6 +173,11 @@ public class AStar : MonoBehaviour {
         return path;
     }
 
+    /// <summary>
+    /// Returns true when next point is reached.
+    /// </summary>
+    /// <param name="speed"></param>
+    /// <returns></returns>
     public bool MoveToNextPoint(float speed) {
         float step = speed * Time.deltaTime;
         if (currentPath == null) {
@@ -185,10 +190,21 @@ public class AStar : MonoBehaviour {
         if (transform.position.Equals(target)) {
             return true;
         } else {
+            transform.LookAt(target);
             transform.position = Vector3.MoveTowards(transform.position, target, step);
             return false;
         }
     }
+
+    // Lerp the LookAt for aesthetics.
+    /*/// <summary>
+    /// Returns true when the GameObject is facing the next point.
+    /// </summary>
+    /// <param name="target">Point to look at.</param>
+    /// <returns></returns>
+    private bool LookAtNextPoint(Vector3 target) {
+
+    }*/
 
     public void GeneratePath() {
         pointCloud.RemoveAllPoints("AStarPath");
