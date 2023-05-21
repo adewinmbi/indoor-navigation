@@ -64,7 +64,7 @@ public class AStar : MonoBehaviour {
         return successors;
     }
 
-    private void Algorithm(Vector2 start, Vector2 goal) {
+    private List<Node> Algorithm(Vector2 start, Vector2 goal) {
         int maxIterations = 99; // Arbitrary value
         List<Node> openList = new List<Node>();
         List<Node> closedList = new List<Node>();
@@ -79,7 +79,7 @@ public class AStar : MonoBehaviour {
 
         while (openList.Count > 0) {
             if (maxIterations < 0) {
-                return;
+                return null;
             }
 
             q = openList[0];
@@ -94,13 +94,12 @@ public class AStar : MonoBehaviour {
             pointCloud.DrawPoint(pointCloud.PointToWorld(q.position), Color.grey, "AStarPath");
 
             if (q.position.Equals(goal)) {
-                RetracePath(startingNode, q);
-                return;
+                return RetracePath(startingNode, q);
             } else {
                 foreach (Node n in GetSuccessors(new Node(goal))) {
                     if (q.position.Equals(n.position)) {
                         RetracePath(startingNode, q);
-                        return;
+                        return null;
                     }
                 }
             }
@@ -148,10 +147,10 @@ public class AStar : MonoBehaviour {
             maxIterations--;
         }
 
-
+        return null;
     }
 
-    private void RetracePath(Node startNode, Node endNode) {
+    private List<Node> RetracePath(Node startNode, Node endNode) {
         List<Node> path = new List<Node>();
         Node currentNode = endNode;
 
@@ -164,11 +163,13 @@ public class AStar : MonoBehaviour {
         foreach (Node n in path) {
             pointCloud.DrawPoint(pointCloud.PointToWorld(n.position), Color.cyan, "AStarPath");
         }
+
+        return path;
     }
 
     public void GeneratePath() {
         pointCloud.RemoveAllPoints("AStarPath");
-        Algorithm(pointCloud.getWalkerPointPosition(), pointCloud.getWatchPointPosition());
+        List<Node> path = Algorithm(pointCloud.getWalkerPointPosition(), pointCloud.getWatchPointPosition());
         Debug.Log("Path generated!");
     }
 
