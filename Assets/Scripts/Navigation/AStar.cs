@@ -7,7 +7,10 @@ public class AStar : MonoBehaviour {
 
     private float nodeLength = 1;
     private List<Node> currentPath = new List<Node>();
-    private int currentNode = 0;
+    private int currentNode = 1;
+    /* Right now, there is no optimization with path generation. Because of this, 
+     * a new path is generated every single time before moving to the next node, 
+     * so the next node (currentNode) will always be the first one.*/
 
     private void Start() {
         nodeLength = pointCloud.GetScale();
@@ -180,7 +183,6 @@ public class AStar : MonoBehaviour {
         Vector2 targetVec2 = pointCloud.PointToWorld(currentPath[currentNode].position);
         Vector3 target = new Vector3(targetVec2.x, transform.position.y, targetVec2.y);
         if (transform.position.Equals(target)) {
-            currentNode++;
             return true;
         } else {
             transform.position = Vector3.MoveTowards(transform.position, target, step);
@@ -191,7 +193,6 @@ public class AStar : MonoBehaviour {
     public void GeneratePath() {
         pointCloud.RemoveAllPoints("AStarPath");
         Algorithm(pointCloud.getWalkerPointPosition(), pointCloud.getWatchPointPosition());
-        currentNode = 0;
         Debug.Log("Path generated!");
     }
 

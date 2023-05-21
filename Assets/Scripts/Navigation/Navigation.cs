@@ -13,6 +13,7 @@ public class Navigation : MonoBehaviour {
     [SerializeField] private BLEBeacon beaconM;
     [SerializeField] private float rotationSpeed;
     private readonly float tolerance = 0.3f;
+    private readonly float movementSpeed = 5;
     private float rotation = 0;
     private Rigidbody rBody;
 
@@ -72,8 +73,8 @@ public class Navigation : MonoBehaviour {
     int fullLidarRotations = 0;
     private bool lidarDebounce = false;
     private IEnumerator RunNavigation() {
-        walkerState = WalkerState.Idle;
-        while (walkerState != WalkerState.Arrived) {
+        while (true) { // For debug purposes
+        //while (walkerState != WalkerState.Arrived) {
             if (navEnabled && !AtSetpoint() && walkerState != WalkerState.DirectDrive && walkerState != WalkerState.LidarDrive) {
                 walkerState = WalkerState.BLEDrive;
 
@@ -114,7 +115,7 @@ public class Navigation : MonoBehaviour {
                             aStar.GeneratePath();
 
                             // Navigate to next point in path. (using yield return StartCoroutine)
-                            yield return new WaitUntil(() => aStar.MoveToNextPoint(20));
+                            yield return new WaitUntil(() => aStar.MoveToNextPoint(movementSpeed));
                             fullLidarRotations++;
                             lidarDebounce = true;
                         }
@@ -125,7 +126,7 @@ public class Navigation : MonoBehaviour {
                         aStar.GeneratePath();
 
                         // Navigate to next point in path. (using yield return StartCoroutine)
-                        yield return new WaitUntil(() => aStar.MoveToNextPoint(20));
+                        yield return new WaitUntil(() => aStar.MoveToNextPoint(movementSpeed));
                         fullLidarRotations++;
                         lidarDebounce = true;
                     }
