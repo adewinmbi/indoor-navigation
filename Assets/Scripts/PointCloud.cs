@@ -88,10 +88,6 @@ public class PointCloud : MonoBehaviour {
         // Debug.Log(newPointIcon != null);
     }
 
-    public void AddPoint() {
-
-    }
-
     public void RemoveAllPoints(string pointCloudGroupName) {
         if (!pointCloudGroups.ContainsKey(pointCloudGroupName)) {
             Debug.LogWarning("Could not find point cloud group with given name!");

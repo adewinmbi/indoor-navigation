@@ -7,7 +7,7 @@ public class WalkerMovement : MonoBehaviour {
     [SerializeField] private PointCloud pointCloud;
     [SerializeField] private Vector2 translationSpeed;
     [SerializeField] private float rotationSpeed;
-    [SerializeField] private BLENavigation bleNavigation;
+    [SerializeField] private Navigation bleNavigation;
 
     private void Update() {
         Vector2 translation = new Vector2();

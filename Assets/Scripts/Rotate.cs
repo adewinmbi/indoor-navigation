@@ -12,7 +12,7 @@ public class Rotate : MonoBehaviour {
         transform.Rotate(Vector3.up * Time.deltaTime * speed);
         Vector3 eulerRotation = transform.localRotation.eulerAngles;
 
-        if (BLENavigation.InRange(eulerRotation.y, 0, 5)) { // If rotation is within 5 degrees of 0, increment the counter.
+        if (Navigation.InRange(eulerRotation.y, 0, 5)) { // If rotation is within 5 degrees of 0, increment the counter.
             if (rotationCountDebounce == true) {
                 rotationCounter++;
             }
@@ -20,7 +20,7 @@ public class Rotate : MonoBehaviour {
         }
 
         // Debounce to ensure rotationCounter is not incremented several times.
-        if (BLENavigation.InRange(eulerRotation.y, 180, 5)) {
+        if (Navigation.InRange(eulerRotation.y, 180, 5)) {
             rotationCountDebounce = true;
         }
     }
