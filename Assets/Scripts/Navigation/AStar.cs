@@ -64,7 +64,7 @@ public class AStar : MonoBehaviour {
         return successors;
     }
 
-    public void GeneratePath(Vector2 start, Vector2 goal) {
+    private void Algorithm(Vector2 start, Vector2 goal) {
         int maxIterations = 99; // Arbitrary value
         List<Node> openList = new List<Node>();
         List<Node> closedList = new List<Node>();
@@ -166,9 +166,10 @@ public class AStar : MonoBehaviour {
         }
     }
 
-    public void RunAStar() {
+    public void GeneratePath() {
         pointCloud.RemoveAllPoints("AStarPath");
-        GeneratePath(pointCloud.getWalkerPointPosition(), pointCloud.getWatchPointPosition());
+        Algorithm(pointCloud.getWalkerPointPosition(), pointCloud.getWatchPointPosition());
+        Debug.Log("Path generated!");
     }
 
 }

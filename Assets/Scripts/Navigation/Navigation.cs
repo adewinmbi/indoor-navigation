@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class BLENavigation : MonoBehaviour {
+public class Navigation : MonoBehaviour {
 
+    [SerializeField] private AStar aStar;
     [SerializeField] private Rotate lidarRotate;
     [SerializeField] private Distance distanceSensor;
     [SerializeField] private BLEBeacon beaconL;
@@ -95,6 +96,7 @@ public class BLENavigation : MonoBehaviour {
                 transform.Translate(translation);
             } else {
                 walkerState = WalkerState.Arrived;
+                Debug.Log("Arrived!");
             }
 
         } else if (navEnabled && walkerState == WalkerState.LidarDrive) { // Lidar drive
@@ -110,15 +112,19 @@ public class BLENavigation : MonoBehaviour {
                     // Next point
                     if (lidarRotate.FullRotation()) {
                         // Generate A* path.
+                        aStar.GeneratePath();
+
                         // Navigate to next point in path.
                         fullLidarRotations++;
                         lidarDebounce = true;
                     }
                 }
-            } else { // WORKSSSSSSSSSS
+            } else {
                 // next point
                 if (lidarRotate.FullRotation()) {
                     // Generate A* path.
+                    aStar.GeneratePath();
+
                     // Navigate to next point in path.
                     fullLidarRotations++;
                     lidarDebounce = true;
