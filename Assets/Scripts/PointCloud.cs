@@ -34,7 +34,7 @@ public class PointCloud : MonoBehaviour {
     }
 
     public Vector2 PointToWorld(Vector2 point) {
-        return new Vector2(point.x / 17, point.y / 17);
+        return new Vector2(point.x / scale, point.y / scale);
     }
 
     public void UpdateWalkerPosition(Vector3 position) {

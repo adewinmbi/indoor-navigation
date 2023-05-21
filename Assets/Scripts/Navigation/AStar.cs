@@ -6,6 +6,8 @@ public class AStar : MonoBehaviour {
     [SerializeField] private PointCloud pointCloud;
 
     private float nodeLength = 1;
+    private List<Node> currentPath = new List<Node>();
+    private int currentNode = 0;
 
     private void Start() {
         nodeLength = pointCloud.GetScale();
@@ -164,12 +166,32 @@ public class AStar : MonoBehaviour {
             pointCloud.DrawPoint(pointCloud.PointToWorld(n.position), Color.cyan, "AStarPath");
         }
 
+        currentPath = path;
         return path;
+    }
+
+    public bool MoveToNextPoint(float speed) {
+        float step = speed * Time.deltaTime;
+        if (currentPath == null) {
+            Debug.Log("try harder");
+            return false;
+        }
+
+        Vector2 targetVec2 = pointCloud.PointToWorld(currentPath[currentNode].position);
+        Vector3 target = new Vector3(targetVec2.x, transform.position.y, targetVec2.y);
+        if (transform.position.Equals(target)) {
+            currentNode++;
+            return true;
+        } else {
+            transform.position = Vector3.MoveTowards(transform.position, target, step);
+            return false;
+        }
     }
 
     public void GeneratePath() {
         pointCloud.RemoveAllPoints("AStarPath");
-        List<Node> path = Algorithm(pointCloud.getWalkerPointPosition(), pointCloud.getWatchPointPosition());
+        Algorithm(pointCloud.getWalkerPointPosition(), pointCloud.getWatchPointPosition());
+        currentNode = 0;
         Debug.Log("Path generated!");
     }
 

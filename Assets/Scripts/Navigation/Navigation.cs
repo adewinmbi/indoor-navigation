@@ -114,6 +114,7 @@ public class Navigation : MonoBehaviour {
                             aStar.GeneratePath();
 
                             // Navigate to next point in path. (using yield return StartCoroutine)
+                            yield return new WaitUntil(() => aStar.MoveToNextPoint(20));
                             fullLidarRotations++;
                             lidarDebounce = true;
                         }
@@ -124,6 +125,7 @@ public class Navigation : MonoBehaviour {
                         aStar.GeneratePath();
 
                         // Navigate to next point in path. (using yield return StartCoroutine)
+                        yield return new WaitUntil(() => aStar.MoveToNextPoint(20));
                         fullLidarRotations++;
                         lidarDebounce = true;
                     }
