@@ -101,7 +101,6 @@ public class AStar : MonoBehaviour {
             foreach (Vector2 pointSuccessor in pointSuccessors) {
                 if (!listSuccessors.Contains(pointSuccessor) && !points.Contains(pointSuccessor)) {
                     listSuccessors.Add(pointSuccessor);
-                    // pointCloud.DrawPoint(pointSuccessor, Color.magenta, "AStarPath");
                 }
             }
         }
@@ -110,7 +109,7 @@ public class AStar : MonoBehaviour {
     }
 
     private List<Node> Algorithm(Vector2 start, Vector2 goal) {
-        int maxIterations = 99; // Arbitrary value
+        int maxIterations = 500; // Arbitrary value
         List<Node> openList = new List<Node>();
         List<Node> closedList = new List<Node>();
 

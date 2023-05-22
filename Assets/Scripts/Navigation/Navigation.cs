@@ -80,7 +80,7 @@ public class Navigation : MonoBehaviour {
         while (true) { // For debug purposes
         // while (walkerState != WalkerState.Arrived) {
 
-            walkerStatusUpdate.text = " Walker State: " + walkerState + " ";
+            walkerStatusUpdate.text = walkerState.ToString();
             if (navEnabled && !AtSetpoint() && walkerState != WalkerState.DirectDrive && walkerState != WalkerState.LidarDrive) {
                 walkerState = WalkerState.BLEDrive;
 

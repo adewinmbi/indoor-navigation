@@ -37,6 +37,10 @@ public class WalkerMovement : MonoBehaviour {
             rotation = 1;
         }
 
+        if (Input.GetKeyDown(KeyCode.R)) {
+            pointCloud.Clear();
+        }
+
         // Enable rotation navigation when 'B' is held
         bleNavigation.ToggleNavigation(Input.GetKey(KeyCode.B));
 
