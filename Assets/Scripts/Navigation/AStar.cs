@@ -225,18 +225,6 @@ public class AStar : MonoBehaviour {
             return false;
         }
 
-        /*// This could be replaced with a control loop in real life
-        if (beaconL.GetReading() > beaconR.GetReading()) {
-            rotation = -1; // Turn left
-        }
-
-        if (beaconR.GetReading() > beaconL.GetReading()) {
-            rotation = 1; // Turn right
-        }
-
-        // Clamp x and z rotation
-        transform.Rotate(Vector3.up, rotation);*/
-
         if (currentPath.Count <= 1) {
             Debug.Log("Path size is less than 1!");
             return true;
@@ -248,21 +236,11 @@ public class AStar : MonoBehaviour {
             return true;
         } else {
             Quaternion rotation = Quaternion.LookRotation(target - transform.position);
-            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime);
+            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, step);
             transform.position = Vector3.MoveTowards(transform.position, target, step);
             return false;
         }
     }
-
-    // Lerp the LookAt for aesthetics.
-    /*/// <summary>
-    /// Returns true when the GameObject is facing the next point.
-    /// </summary>
-    /// <param name="target">Point to look at.</param>
-    /// <returns></returns>
-    private bool LookAtNextPoint(Vector3 target) {
-
-    }*/
 
     public void GeneratePath() {
         pointCloud.RemoveAllPoints("AStarPath");
