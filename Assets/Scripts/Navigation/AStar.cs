@@ -225,12 +225,30 @@ public class AStar : MonoBehaviour {
             return false;
         }
 
+        /*// This could be replaced with a control loop in real life
+        if (beaconL.GetReading() > beaconR.GetReading()) {
+            rotation = -1; // Turn left
+        }
+
+        if (beaconR.GetReading() > beaconL.GetReading()) {
+            rotation = 1; // Turn right
+        }
+
+        // Clamp x and z rotation
+        transform.Rotate(Vector3.up, rotation);*/
+
+        if (currentPath.Count <= 1) {
+            Debug.Log("Path size is less than 1!");
+            return true;
+        }
         Vector2 targetVec2 = pointCloud.PointToWorld(currentPath[currentNode].position);
         Vector3 target = new Vector3(targetVec2.x, transform.position.y, targetVec2.y);
+
         if (transform.position.Equals(target)) {
             return true;
         } else {
-            transform.LookAt(target);
+            Quaternion rotation = Quaternion.LookRotation(target - transform.position);
+            transform.rotation = Quaternion.Lerp(transform.rotation, rotation, Time.deltaTime);
             transform.position = Vector3.MoveTowards(transform.position, target, step);
             return false;
         }
