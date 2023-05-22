@@ -138,9 +138,9 @@ public class PointCloud : MonoBehaviour {
         }
     }
 
-    public bool IsObstacle(Vector2 point) {
+    /*public bool IsObstacle(Vector2 point) {
         return hitPoints.Contains(point);
-    }
+    }*/
 
     public List<Vector2> GetHitPoints() {
         return hitPoints;

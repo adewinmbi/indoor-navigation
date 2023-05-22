@@ -69,6 +69,46 @@ public class AStar : MonoBehaviour {
         return successors;
     }
 
+    // Get neighbors of a vector2
+    private List<Vector2> GetSuccessors(Vector2 parent) {
+        float parentX = parent.x;
+        float parentY = parent.y;
+
+        List<Vector2> successors = new List<Vector2>();
+        successors.Add(new Vector2(parentX, parentY + 1)); // North
+        successors.Add(new Vector2(parentX - 1, parentY + 1)); // Northwest
+        successors.Add(new Vector2(parentX + 1, parentY + 1)); // Northeast
+        successors.Add(new Vector2(parentX, parentY - 1)); // South
+        successors.Add(new Vector2(parentX - 1, parentY - 1)); // Southwest
+        successors.Add(new Vector2(parentX + 1, parentY - 1)); // Southeast
+        successors.Add(new Vector2(parentX - 1, parentY)); // West
+        successors.Add(new Vector2(parentX + 1, parentY)); // East
+
+        return successors;
+    }
+
+    /// <summary>
+    /// Finds neighbors of all points, not including the points themselves.
+    /// </summary>
+    /// <param name="points">Points to find neighbors of.</param>
+    /// <returns></returns>
+    private List<Vector2> GetSuccessors(List<Vector2> points) {
+        List<Vector2> listSuccessors = new List<Vector2>();
+
+        foreach (Vector2 vec in points) {
+            List<Vector2> pointSuccessors = GetSuccessors(vec);
+
+            foreach (Vector2 pointSuccessor in pointSuccessors) {
+                if (!listSuccessors.Contains(pointSuccessor)) {
+                    listSuccessors.Add(pointSuccessor);
+                    // pointCloud.DrawPoint(pointSuccessor, Color.magenta, "AStarPath");
+                }
+            }
+        }
+
+        return listSuccessors;
+    }
+
     private List<Node> Algorithm(Vector2 start, Vector2 goal) {
         int maxIterations = 99; // Arbitrary value
         List<Node> openList = new List<Node>();
@@ -97,6 +137,8 @@ public class AStar : MonoBehaviour {
             openList.Remove(q); // Remove q from the open list
             closedList.Add(q);
             pointCloud.DrawPoint(pointCloud.PointToWorld(q.position), Color.grey, "AStarPath");
+
+            
 
             if (q.position.Equals(goal)) {
                 return RetracePath(startingNode, q);
@@ -130,8 +172,20 @@ public class AStar : MonoBehaviour {
                 successor.f = successor.g + successor.h;
             }
 
+            // Variables to check collision with walls
+            List<Vector2> hitPointsWorld = pointCloud.GetHitPoints();
+            List<Vector2> obstacleBuffer = GetSuccessors(hitPointsWorld);
+
+            /*foreach (Vector2 hitPoint in hitPointsWorld) {
+
+                // hitPointsPoint.Add(pointCloud.WorldToPoint(hitPoint));
+            }*/
+            // List<Vector2> obstacleBuffer = GetSuccessors(hitPointsPoint);
+
             foreach (Node successor in successors) {
-                if (closedList.Contains(successor) || pointCloud.IsObstacle(pointCloud.PointToWorld(successor.position))) {
+                if (closedList.Contains(successor) 
+                    || hitPointsWorld.Contains(pointCloud.PointToWorld(successor.position))
+                    || obstacleBuffer.Contains(pointCloud.PointToWorld(successor.position))) {
                     continue;
                 }
 
