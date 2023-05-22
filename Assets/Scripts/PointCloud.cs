@@ -33,6 +33,11 @@ public class PointCloud : MonoBehaviour {
         return pointPos;
     }
 
+    /// <summary>
+    /// Divides given vector by scale.
+    /// </summary>
+    /// <param name="point"></param>
+    /// <returns></returns>
     public Vector2 PointToWorld(Vector2 point) {
         return new Vector2(point.x / scale, point.y / scale);
     }
