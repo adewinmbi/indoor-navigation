@@ -103,7 +103,6 @@ public class Navigation : MonoBehaviour {
                     transform.Translate(translation);
                 } else {
                     walkerState = WalkerState.Arrived;
-                    Debug.Log("Arrived!");
                 }
 
             } else if (navEnabled && walkerState == WalkerState.LidarDrive) { // Lidar drive
@@ -118,9 +117,10 @@ public class Navigation : MonoBehaviour {
                     // Navigate to next point in path. (using yield return StartCoroutine)
                     yield return new WaitUntil(() => aStar.MoveToNextPoint(movementSpeed));
 
-                    if (navEnabled && (beaconL.GetReading() < bleProximityTolerance
-                        && beaconM.GetReading() < bleProximityTolerance
-                        && beaconR.GetReading() < bleProximityTolerance)) {
+                    if (navEnabled 
+                        && Mathf.Abs(beaconL.GetReading()) < bleProximityTolerance
+                        && Mathf.Abs(beaconM.GetReading()) < bleProximityTolerance
+                        && Mathf.Abs(beaconR.GetReading()) < bleProximityTolerance) {
                         /*When using A* navigation, there is rarely a time when the walker is directly aligned 
                             * with the watch enough to go into direct drive mode. So, this uses beacons to check for proximity to turn off the walker. */
                         walkerState = WalkerState.Arrived;
