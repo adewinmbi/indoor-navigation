@@ -154,17 +154,17 @@ public class AStar : MonoBehaviour {
             List<Vector2> goalBuffer = GetSuccessors(pointGoal);
             List<Vector2> goalBufferBuffer = GetSuccessors(goalBuffer);
             foreach (Vector2 vec in goalBufferBuffer) {
-                Debug.Log(vec + " " + pointGoal);
+                // Debug.Log(vec + " " + pointGoal);
                 pointCloud.DrawPoint(vec, Color.magenta, "AStarPath");
             }
 
             // Make into or statement
-            // Debug.Log(q.position + " " + goalBufferBuffer[0]);
+            Debug.Log(pointCloud.PointToWorld(q.position) + " " + goalBufferBuffer[0]);
             if (q.position.Equals(goal)) {
                 return RetracePath(startingNode, q);
             } 
 
-            if (goalBuffer.Contains(q.position)) {
+            if (goalBufferBuffer.Contains(pointCloud.PointToWorld(q.position))) {
                 return RetracePath(startingNode, q);
             }
 
