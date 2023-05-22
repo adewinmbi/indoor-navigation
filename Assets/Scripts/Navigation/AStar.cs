@@ -138,28 +138,17 @@ public class AStar : MonoBehaviour {
             closedList.Add(q);
             pointCloud.DrawPoint(pointCloud.PointToWorld(q.position), Color.grey, "AStarPath");
 
-            /*// Variables to check collision with walls
-            List<Vector2> hitPoints = pointCloud.GetHitPoints();
-            List<Vector2> obstacleBuffer = GetSuccessors(hitPoints);
-
-            foreach (Node successor in successors) {
-                if (closedList.Contains(successor)
-                    || hitPoints.Contains(pointCloud.PointToWorld(successor.position))
-                    || obstacleBuffer.Contains(pointCloud.PointToWorld(successor.position))) {
-                    continue;
-                }*/
-
-            // List<Vector2> goalPoint = goal;
+            /*Generate 2-unit wide buffer around goal area. This is because an 
+             * obstacle buffer is generated around all obstacles, and the lidar 
+             * cannot tell which obstacles are part of the goal.*/
             Vector2 pointGoal = pointCloud.PointToWorld(goal);
             List<Vector2> goalBuffer = GetSuccessors(pointGoal);
             List<Vector2> goalBufferBuffer = GetSuccessors(goalBuffer);
             foreach (Vector2 vec in goalBufferBuffer) {
-                // Debug.Log(vec + " " + pointGoal);
                 pointCloud.DrawPoint(vec, Color.magenta, "AStarPath");
             }
 
             // Make into or statement
-            // Debug.Log(pointCloud.PointToWorld(q.position) + " " + goalBufferBuffer[0]);
             if (q.position.Equals(goal)) {
                 return RetracePath(startingNode, q);
             } 
@@ -168,31 +157,7 @@ public class AStar : MonoBehaviour {
                 return RetracePath(startingNode, q);
             }
 
-            /*if (goalBufferBuffer.Contains(q.position)) {
-                return RetracePath(startingNode, q);
-            }*/
-                /*foreach (Node n in GetSuccessors(new Node(goal))) {
-                    if (goalBufferBuffer.Contains(q.position)) { // (q.position)
-                        RetracePath(startingNode, q);
-                        return null;
-                    }
-                }*/
-
             List<Node> successors = GetSuccessors(q);
-            /*float qX = q.position.x;
-            float qY = q.position.y;
-
-            // Note: Can be optimized because we are generating successors even if we have already reached the goal. Or, generate neighbor on grid generation.
-            List<Node> successors = new List<Node>();
-            successors.Add(new Node(new Vector2(qX, qY + nodeLength))); // North
-            successors.Add(new Node(new Vector2(qX - nodeLength, qY + nodeLength))); // Northwest
-            successors.Add(new Node(new Vector2(qX + nodeLength, qY + nodeLength))); // Northeast
-            successors.Add(new Node(new Vector2(qX, qY - nodeLength))); // South
-            successors.Add(new Node(new Vector2(qX - nodeLength, qY - nodeLength))); // Southwest
-            successors.Add(new Node(new Vector2(qX + nodeLength, qY - nodeLength))); // Southeast
-            successors.Add(new Node(new Vector2(qX - nodeLength, qY))); // West
-            successors.Add(new Node(new Vector2(qX + nodeLength, qY))); // East*/
-
             foreach (Node successor in successors) {
                 successor.g = DistanceBetween(successor.position, q.position) + q.g;
                 successor.h = DistanceBetween(successor.position, goal);
@@ -202,11 +167,6 @@ public class AStar : MonoBehaviour {
             // Variables to check collision with walls
             List<Vector2> hitPoints = pointCloud.GetHitPoints();
             List<Vector2> obstacleBuffer = GetSuccessors(hitPoints);
-            // Debug.Log(obstacleBuffer.Count);
-            /*foreach (Vector2 vec in obstacleBuffer) {
-                Debug.Log(vec);
-                pointCloud.DrawPoint(pointCloud.PointToWorld(vec), Color.magenta, "AStarPath");
-            }*/
 
             foreach (Node successor in successors) {
                 if (closedList.Contains(successor) 
