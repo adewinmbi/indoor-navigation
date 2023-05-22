@@ -40,6 +40,7 @@ public class Navigation : MonoBehaviour {
 
     public void ToggleNavigation(bool isEnabled) {
         navEnabled = isEnabled;
+
         if (!isEnabled) {
             rBody.angularVelocity = Vector3.zero; // Stop movement when navigation ends.
         }
@@ -77,7 +78,7 @@ public class Navigation : MonoBehaviour {
     private bool lidarDebounce = false;
     private IEnumerator RunNavigation() {
         while (true) { // For debug purposes
-                       //while (walkerState != WalkerState.Arrived) {
+        // while (walkerState != WalkerState.Arrived) {
 
             walkerStatusUpdate.text = " Walker State: " + walkerState + " ";
             if (navEnabled && !AtSetpoint() && walkerState != WalkerState.DirectDrive && walkerState != WalkerState.LidarDrive) {
