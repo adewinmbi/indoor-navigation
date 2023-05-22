@@ -159,7 +159,7 @@ public class AStar : MonoBehaviour {
             }
 
             // Make into or statement
-            Debug.Log(pointCloud.PointToWorld(q.position) + " " + goalBufferBuffer[0]);
+            // Debug.Log(pointCloud.PointToWorld(q.position) + " " + goalBufferBuffer[0]);
             if (q.position.Equals(goal)) {
                 return RetracePath(startingNode, q);
             } 
@@ -289,7 +289,6 @@ public class AStar : MonoBehaviour {
     public void GeneratePath() {
         pointCloud.RemoveAllPoints("AStarPath");
         Algorithm(pointCloud.getWalkerPointPosition(), pointCloud.getWatchPointPosition());
-        Debug.Log("Path generated!");
     }
 
 }
