@@ -99,7 +99,7 @@ public class AStar : MonoBehaviour {
             List<Vector2> pointSuccessors = GetSuccessors(vec);
 
             foreach (Vector2 pointSuccessor in pointSuccessors) {
-                if (!listSuccessors.Contains(pointSuccessor)) {
+                if (!listSuccessors.Contains(pointSuccessor) && !points.Contains(pointSuccessor)) {
                     listSuccessors.Add(pointSuccessor);
                     // pointCloud.DrawPoint(pointSuccessor, Color.magenta, "AStarPath");
                 }
@@ -138,18 +138,45 @@ public class AStar : MonoBehaviour {
             closedList.Add(q);
             pointCloud.DrawPoint(pointCloud.PointToWorld(q.position), Color.grey, "AStarPath");
 
-            
+            /*// Variables to check collision with walls
+            List<Vector2> hitPoints = pointCloud.GetHitPoints();
+            List<Vector2> obstacleBuffer = GetSuccessors(hitPoints);
 
+            foreach (Node successor in successors) {
+                if (closedList.Contains(successor)
+                    || hitPoints.Contains(pointCloud.PointToWorld(successor.position))
+                    || obstacleBuffer.Contains(pointCloud.PointToWorld(successor.position))) {
+                    continue;
+                }*/
+
+            // List<Vector2> goalPoint = goal;
+            Vector2 pointGoal = pointCloud.PointToWorld(goal);
+            List<Vector2> goalBuffer = GetSuccessors(pointGoal);
+            List<Vector2> goalBufferBuffer = GetSuccessors(goalBuffer);
+            foreach (Vector2 vec in goalBufferBuffer) {
+                Debug.Log(vec + " " + pointGoal);
+                pointCloud.DrawPoint(vec, Color.magenta, "AStarPath");
+            }
+
+            // Make into or statement
+            // Debug.Log(q.position + " " + goalBufferBuffer[0]);
             if (q.position.Equals(goal)) {
                 return RetracePath(startingNode, q);
-            } else {
-                foreach (Node n in GetSuccessors(new Node(goal))) {
-                    if (q.position.Equals(n.position)) {
+            } 
+
+            if (goalBuffer.Contains(q.position)) {
+                return RetracePath(startingNode, q);
+            }
+
+            /*if (goalBufferBuffer.Contains(q.position)) {
+                return RetracePath(startingNode, q);
+            }*/
+                /*foreach (Node n in GetSuccessors(new Node(goal))) {
+                    if (goalBufferBuffer.Contains(q.position)) { // (q.position)
                         RetracePath(startingNode, q);
                         return null;
                     }
-                }
-            }
+                }*/
 
             List<Node> successors = GetSuccessors(q);
             /*float qX = q.position.x;
@@ -173,18 +200,17 @@ public class AStar : MonoBehaviour {
             }
 
             // Variables to check collision with walls
-            List<Vector2> hitPointsWorld = pointCloud.GetHitPoints();
-            List<Vector2> obstacleBuffer = GetSuccessors(hitPointsWorld);
-
-            /*foreach (Vector2 hitPoint in hitPointsWorld) {
-
-                // hitPointsPoint.Add(pointCloud.WorldToPoint(hitPoint));
+            List<Vector2> hitPoints = pointCloud.GetHitPoints();
+            List<Vector2> obstacleBuffer = GetSuccessors(hitPoints);
+            // Debug.Log(obstacleBuffer.Count);
+            /*foreach (Vector2 vec in obstacleBuffer) {
+                Debug.Log(vec);
+                pointCloud.DrawPoint(pointCloud.PointToWorld(vec), Color.magenta, "AStarPath");
             }*/
-            // List<Vector2> obstacleBuffer = GetSuccessors(hitPointsPoint);
 
             foreach (Node successor in successors) {
                 if (closedList.Contains(successor) 
-                    || hitPointsWorld.Contains(pointCloud.PointToWorld(successor.position))
+                    || hitPoints.Contains(pointCloud.PointToWorld(successor.position))
                     || obstacleBuffer.Contains(pointCloud.PointToWorld(successor.position))) {
                     continue;
                 }
