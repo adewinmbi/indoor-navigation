@@ -136,7 +136,7 @@ public class AStar : MonoBehaviour {
 
             openList.Remove(q); // Remove q from the open list
             closedList.Add(q);
-            pointCloud.DrawPoint(pointCloud.PointToWorld(q.position), Color.grey, "AStarPath");
+            // pointCloud.DrawPoint(pointCloud.PointToWorld(q.position), Color.grey, "AStarPath");
 
             /*Generate 2-unit wide buffer around goal area. This is because an 
              * obstacle buffer is generated around all obstacles, and the lidar 
@@ -145,7 +145,7 @@ public class AStar : MonoBehaviour {
             List<Vector2> goalBuffer = GetSuccessors(pointGoal);
             List<Vector2> goalBufferBuffer = GetSuccessors(goalBuffer);
             foreach (Vector2 vec in goalBufferBuffer) {
-                pointCloud.DrawPoint(vec, Color.magenta, "AStarPath");
+                // pointCloud.DrawPoint(vec, Color.magenta, "AStarPath");
             }
 
             // Make into or statement
@@ -184,7 +184,7 @@ public class AStar : MonoBehaviour {
                     
                     if (!openList.Contains(successor)) {
                         openList.Add(successor);
-                        pointCloud.DrawPoint(pointCloud.PointToWorld(successor.position), Color.green, "AStarPath");
+                        // pointCloud.DrawPoint(pointCloud.PointToWorld(successor.position), Color.green, "AStarPath");
                     }
                 }
             }
