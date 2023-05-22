@@ -59,7 +59,7 @@ public class PointCloud : MonoBehaviour {
             hitPoints.Add(fixedHitPoint);
 
             // UI for hit point
-            DrawPoint(fixedHitPoint, Color.red);
+            DrawPoint(fixedHitPoint, Color.red, "Obstacle");
 
             // Debug.Log("Lidar map has changed!");
             // Regenerate path here
@@ -146,6 +146,11 @@ public class PointCloud : MonoBehaviour {
     /*public bool IsObstacle(Vector2 point) {
         return hitPoints.Contains(point);
     }*/
+
+    public void Clear() {
+        hitPoints.Clear();
+        RemoveAllPoints("Obstacle");
+    }
 
     public List<Vector2> GetHitPoints() {
         return hitPoints;
