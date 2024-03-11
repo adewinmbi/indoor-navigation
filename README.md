@@ -1,6 +1,8 @@
 # Indoor Navigation Simulator
 
-This is a 3D simulation for the 2023 Rolling Robots Inventeam project!
+This is a simulation for the 2023 Lemelson-MIT Inventeam competition!
+
+My team prototyped an autonomously indoor-navigating walker which could be summoned from other rooms by the elderly using a wearable. This simulation is a proof of concept of the indoor navigation algorithm I designed.
 
 ## Preview
 
