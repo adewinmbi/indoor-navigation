@@ -1,26 +1,22 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PointCloud : MonoBehaviour {
 
-    [SerializeField] private Image pointIcon;
-    [SerializeField] private Image walkerIcon;
-    [SerializeField] private Image pointCloudHolder;
-    [SerializeField] private Image pointCloudHolderPrefab;
-    [SerializeField] private GameObject watch;
-    [SerializeField] private GameObject debugPointIcon;
-    [SerializeField] private GameObject pointCloudHolderParent;
-    private readonly int scale = 17; // Just for display purposes
-    private readonly int resolutionDecreaseFactor = 1; // Lidar points will be clamped to every X units vertically and horizontally
-    private List<Vector2> hitPoints = new List<Vector2>();
-    private Vector2 walkerPointPosition = new Vector2();
-    private Vector2 watchPointPosition = new Vector2();
-    private Dictionary<string, List<Vector2>> pointCloudGroups = new Dictionary<string, List<Vector2>>();
+    [SerializeField] private Image pointIcon, walkerIcon, pointCloudHolder, pointCloudHolderPrefab;
+    [SerializeField] private GameObject watch, debugPointIcon, pointCloudHolderParent;
+
+    [SerializeField] private readonly int scale = 17; // Constants for display purposes
+    [SerializeField] private readonly float resolutionDecreaseFactor = 1; // Lidar points will be clamped to every X units vertically and horizontally
+
+    private List<Vector2> hitPoints = new();
+    private Vector2 walkerPointPosition = new();
+    private Vector2 watchPointPosition = new();
+    private Dictionary<string, List<Vector2>> pointCloudGroups = new();
 
     private void Start() {
-        // Turn watch position into a point position
+        // Draw watch (target) on the point cloud
         watchPointPosition = WorldToPoint(watch.transform.position);
         DrawPoint(watchPointPosition, Color.black);
     }
@@ -34,12 +30,12 @@ public class PointCloud : MonoBehaviour {
     }
 
     /// <summary>
-    /// Divides given vector by scale.
+    /// Divides given vector by display scale.
     /// </summary>
     /// <param name="point"></param>
     /// <returns></returns>
     public Vector2 PointToWorld(Vector2 point) {
-        return new Vector2(point.x / scale, point.y / scale);
+        return point / scale;
     }
 
     public void UpdateWalkerPosition(Vector3 position) {
@@ -49,7 +45,6 @@ public class PointCloud : MonoBehaviour {
     }
 
     public void AddPoint(Vector3 hitPoint) {
-
         // Decrease resolution of fixed hit point
         Vector2 fixedHitPoint = new Vector2();
         fixedHitPoint.x = RoundToNearest(resolutionDecreaseFactor, hitPoint.x);
@@ -60,9 +55,6 @@ public class PointCloud : MonoBehaviour {
 
             // UI for hit point
             DrawPoint(fixedHitPoint, Color.red, "Obstacle");
-
-            // Debug.Log("Lidar map has changed!");
-            // Regenerate path here
         }
     }
 
@@ -76,7 +68,7 @@ public class PointCloud : MonoBehaviour {
     public void DrawPoint(Vector2 point, Color color, string pointCloudGroupName) {
         GameObject pointCloudGroupHolder;
 
-        // Find parent object
+        // Find parent, or create one if needed
         if (!pointCloudGroups.ContainsKey(pointCloudGroupName)) {
             pointCloudGroupHolder = Instantiate(pointCloudHolderPrefab.gameObject, pointCloudHolderParent.transform);
             pointCloudGroupHolder.name = pointCloudGroupName;
@@ -88,14 +80,12 @@ public class PointCloud : MonoBehaviour {
         Image newPointIcon = Instantiate(pointIcon, pointCloudGroupHolder.transform);
         newPointIcon.gameObject.SetActive(true);
         newPointIcon.rectTransform.localPosition = new Vector3(point.x * scale, point.y * scale);
-        pointCloudGroups[pointCloudGroupName].Add(point); // Add point to vector 2 dictionary
+        pointCloudGroups[pointCloudGroupName].Add(point);
         newPointIcon.color = color;
-        // Debug.Log(newPointIcon != null);
     }
 
     public void RemoveAllPoints(string pointCloudGroupName) {
         if (!pointCloudGroups.ContainsKey(pointCloudGroupName)) {
-            Debug.LogWarning("Could not find point cloud group with given name!");
             return;
         }
 
@@ -103,9 +93,6 @@ public class PointCloud : MonoBehaviour {
         foreach (Transform child in pointCloudHolderParent.transform.Find(pointCloudGroupName).transform) {
             Destroy(child.gameObject);
         }
-
-        //Destroy(pointCloudHolderParent.transform.Find(pointCloudGroupName).transform.gameObject);
-        //pointCloudGroups.Remove(pointCloudGroupName);
     }
 
     public void DrawDebugPoint(Vector2 point, Color color, string message) {
@@ -143,10 +130,6 @@ public class PointCloud : MonoBehaviour {
         }
     }
 
-    /*public bool IsObstacle(Vector2 point) {
-        return hitPoints.Contains(point);
-    }*/
-
     public void Clear() {
         hitPoints.Clear();
         RemoveAllPoints("Obstacle");
@@ -156,19 +139,15 @@ public class PointCloud : MonoBehaviour {
         return hitPoints;
     }
 
-    public int GetResolutionDecreaseFactor() {
-        return resolutionDecreaseFactor;
-    }
-
     public int GetScale() {
         return scale;
     }
 
-    public Vector2 getWalkerPointPosition() {
+    public Vector2 GetWalkerPointPosition() {
         return walkerPointPosition;
     }
 
-    public Vector2 getWatchPointPosition() {
+    public Vector2 GetWatchPointPosition() {
         return watchPointPosition;
     }
 

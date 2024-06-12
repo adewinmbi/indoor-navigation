@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class WalkerMovement : MonoBehaviour {
@@ -10,7 +8,7 @@ public class WalkerMovement : MonoBehaviour {
     [SerializeField] private Navigation bleNavigation;
 
     private void Update() {
-        Vector2 translation = new Vector2();
+        Vector2 translation = new();
         float rotation = 0;
 
         if (Input.GetKey(KeyCode.W)) {

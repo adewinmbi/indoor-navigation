@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,7 +13,6 @@ public class BLEBeacon : MonoBehaviour {
         return sensorReading;
     }
 
-    // Update is called once per frame
     void Update() {
         float dot = Vector3.Dot(transform.up, (watch.transform.position - transform.position).normalized);
         float distance = Vector3.Distance(transform.position, watch.transform.position);

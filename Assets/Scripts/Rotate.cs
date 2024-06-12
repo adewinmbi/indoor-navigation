@@ -1,10 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Rotate : MonoBehaviour {
 
-    public int speed = 1;
+    [SerializeField] public int speed = 1;
+
     private float rotationCounter = 0;
     private bool rotationCountDebounce = false;
 

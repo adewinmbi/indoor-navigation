@@ -7,7 +7,7 @@ public class WatchMovement : MonoBehaviour {
     [SerializeField] private double rotationSpeed;
 
     private void Update() {
-        Vector2 translation = new Vector2();
+        Vector2 translation = new();
         if (Input.GetKey(KeyCode.UpArrow)) {
             translation.y = 1;
         }
